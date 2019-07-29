@@ -29,7 +29,7 @@ router.route('/postScream').post((req, res) => {
     });
 });
 
-router.route('/getScream/:screamId').get((req, res) => {
+router.route('/:screamId').get((req, res) => {
   Scream.find({ _id: req.params.screamId })
     .then(scream => res.json(scream))
     .catch(err => res.status(400).json('Error: ' + err));

@@ -6,8 +6,10 @@ const screamSchema = new Schema({
   userHandle: {
     type: String,
     required: true,
-    unique: true,
     trim: true,
+  },
+  userImage: {
+    type: String,
   },
   body: {
     type: String,
