@@ -1,13 +1,16 @@
 const router = require('express').Router();
 let Scream = require('../models/scream.model');
 
-router.route('/').get((req, res) => {
-  Scream.find()
-    .then(screams => res.json(screams))
-    .catch(err => res.json(err));
+router.route('/').get(async (req, res) => {
+  try {
+    const screams = await Scream.find();
+    res.json(screams);
+  } catch (err) {
+    res.json(err);
+  }
 });
 
-router.route('/postScream').post((req, res) => {
+router.route('/postScream').post(async (req, res) => {
   if (req.method !== 'POST') {
     return res.status(400).json({ error: 'Method not allowed' });
   }
@@ -20,19 +23,26 @@ router.route('/postScream').post((req, res) => {
     commentCount: 0,
   });
 
-  newScream
-    .save()
-    .then(() => res.json('Scream posted'))
-    .catch(err => {
-      console.error(err);
-      res.status(500).json({ error: 'Something went wrong' });
-    });
+  try {
+    await newScream.save();
+    res.json('Scream posted');
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Something went wrong' });
+  }
 });
 
-router.route('/:screamId').get((req, res) => {
-  Scream.find({ _id: req.params.screamId })
-    .then(scream => res.json(scream))
-    .catch(err => res.status(400).json('Error: ' + err));
+router.route('/:screamId').get(async (req, res) => {
+  try {
+    const scream = await Scream.findOne({ _id: req.params.screamId });
+    if (!scream) {
+      return res.status(400).json({ error: 'Scream not found' });
+    }
+    res.json(scream);
+  } catch (err) {
+    console.log('Err', err);
+    res.status(400).json({ error: err });
+  }
 });
 
 module.exports = router;

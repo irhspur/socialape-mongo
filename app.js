@@ -23,6 +23,7 @@ const screamRouter = require('./routes/screams');
 
 app.use('/api/users', userRouter);
 app.use('/api/screams', screamRouter);
+app.use(express.static('public'));
 
 app.get('/', (req, res) => res.send('Hello Worldo'));
 
